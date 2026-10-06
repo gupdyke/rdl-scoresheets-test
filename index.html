@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RDL Scoresheets (test)</title>
+  <link rel="stylesheet" href="style.css?v=20261006204504">
+</head>
+<body>
+  <header>
+    <h1>RDL Scoresheets <span class="badge">test</span></h1>
+    <p id="season" class="sub"></p>
+  </header>
+
+  <section class="panel">
+    <div class="controls">
+      <label>Division <select id="division"></select></label>
+      <label>Week <select id="week"></select></label>
+      <label class="wide">My team <select id="team"></select></label>
+    </div>
+    <div id="mine"></div>
+    <div class="bar">
+      <a id="download-all" class="button" href="#">Download all matches (1 PDF)</a>
+      <button id="copy-link" type="button" class="ghost">Copy link</button>
+    </div>
+    <p id="copied" class="note" role="status"></p>
+    <div id="matches"></div>
+  </section>
+
+  <section id="viewer" class="panel" hidden>
+    <div class="viewer-head">
+      <h2 id="viewer-title"></h2>
+      <div class="viewer-tabs">
+        <a id="viewer-open" target="_blank" rel="noopener">Open</a>
+        <button type="button" id="viewer-close" aria-label="Close">×</button>
+      </div>
+    </div>
+    <iframe id="viewer-frame" title="Scoresheet"></iframe>
+  </section>
+
+  <section class="panel">
+    <h2>Get the scoresheets by email</h2>
+    <p class="sub">Each week's scoresheets for your division, emailed to you before the matches.</p>
+    <form id="signup" novalidate>
+      <label>Email <input type="email" id="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>Division <select id="signup-division" required></select></label>
+      <div id="turnstile"></div>
+      <button type="submit">Sign up</button>
+      <p id="signup-msg" role="status"></p>
+    </form>
+    <p class="note">We'll email you a link to confirm your address. Sign-ups are then reviewed before anyone is added to the mailing list.</p>
+  </section>
+
+  <script>window.SCORESHEETS = {"public": true, "version": "20261006204504", "signupURL": "https://rdl-signups.rdl-signups-worker.workers.dev", "turnstileSiteKey": "0x4AAAAAAFPqkSKON-LGIh86"};</script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" defer></script>
+  <script src="app.js?v=20261006204504" defer></script>
+</body>
+</html>
