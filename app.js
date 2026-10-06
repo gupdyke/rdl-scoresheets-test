@@ -1,10 +1,9 @@
 // RDL Scoresheets page: pick a division, week and (optionally) your team; download
-// each match as one PDF (Front + Back) or the whole division; sign up for the weekly
+// each match as one PDF (Front + Back); sign up for the weekly
 // emails. Two ways to run:
 //   local (rdl/web.py):        /api/catalog, /combined.pdf, /api/signup on the same server
 //   public (build_public.py):  window.SCORESHEETS = {public, version, signupURL, turnstileSiteKey};
-//                              data/catalog.json and pdf/... files on GitHub Pages; the
-//                              division PDF is put together here (pdf-lib); sign-ups go to
+//                              data/catalog.json and pdf/... files on GitHub Pages; sign-ups go to
 //                              the Cloudflare worker with a Turnstile check.
 const CFG = window.SCORESHEETS || {};
 const $ = (id) => document.getElementById(id);
@@ -66,9 +65,6 @@ function render() {
   const byes = (w && w.byes[div()]) || [];
   syncURL();
   $("copied").textContent = "";
-  $("download-all").textContent = `Download all ${div()} matches (1 PDF)`;
-  $("download-all").hidden = !matches.length;
-  if (!CFG.public) $("download-all").href = `/combined.pdf?${new URLSearchParams({ week: $("week").value, div: div() })}&download`;
   // Your team: its match first and highlighted, or a note that it's on its bye week.
   const isMine = (m) => mineCode && (m.home_code === mineCode || m.away_code === mineCode);
   const myBye = byes.find((b) => b.code === mineCode);
@@ -80,29 +76,6 @@ function render() {
   const ordered = [...matches.filter(isMine), ...matches.filter((m) => !isMine(m))];
   $("matches").replaceChildren(...ordered.map((m) => matchCard(m, isMine(m))),
     ...byes.filter((b) => b !== myBye).map((b) => el("p", { className: "bye" }, `${b.name} has a BYE week.`)));
-}
-
-// Public site: no server to join the division's PDFs, so do it here.
-async function downloadAll(e) {
-  if (!CFG.public) return;   // local: the link itself downloads /combined.pdf
-  e.preventDefault();
-  const btn = $("download-all"), text = btn.textContent;
-  btn.textContent = "Preparing…";
-  try {
-    const out = await PDFLib.PDFDocument.create();
-    for (const m of week().divisions[div()]) {
-      const src = await PDFLib.PDFDocument.load(await (await fetch(matchURL(m))).arrayBuffer());
-      (await out.copyPages(src, src.getPageIndices())).forEach((p) => out.addPage(p));
-    }
-    const url = URL.createObjectURL(new Blob([await out.save()], { type: "application/pdf" }));
-    const a = el("a", { href: url, download: catalog.division_pdf[`${$("week").value}${div()}`] });
-    document.body.append(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  } catch {
-    alert("Couldn't put the division's scoresheets together. Download the matches one at a time instead.");
-  } finally {
-    btn.textContent = text;
-  }
 }
 
 function view(m) {
@@ -190,7 +163,6 @@ async function start() {
   });
   $("week").addEventListener("change", () => { closeViewer(); render(); });
   $("team").addEventListener("change", () => { store.set("team", $("team").value); render(); });
-  $("download-all").addEventListener("click", downloadAll);
   $("copy-link").addEventListener("click", copyLink);
   $("viewer-close").addEventListener("click", closeViewer);
   $("signup").addEventListener("submit", signup);
