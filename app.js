@@ -55,8 +55,7 @@ function matchCard(m, mine) {
     mine ? el("p", { className: "tag-mine" }, "Your match") : null,
     el("h3", {}, label(m.home), el("span", { className: "vs" }, " (home) vs "), label(m.away)),
     m.venue ? el("p", { className: "venue" }, `at ${m.venue}`) : null,
-    el("div", { className: "actions" }, dl,
-      el("button", { type: "button", className: "ghost", onclick: () => view(m) }, "View")));
+    el("div", { className: "actions" }, dl));
 }
 
 function render() {
@@ -64,7 +63,6 @@ function render() {
   const matches = (w && w.divisions[div()]) || [];
   const byes = (w && w.byes[div()]) || [];
   syncURL();
-  $("copied").textContent = "";
   // Your team: its match first and highlighted, or a note that it's on its bye week.
   const isMine = (m) => mineCode && (m.home_code === mineCode || m.away_code === mineCode);
   const myBye = byes.find((b) => b.code === mineCode);
@@ -76,24 +74,6 @@ function render() {
   const ordered = [...matches.filter(isMine), ...matches.filter((m) => !isMine(m))];
   $("matches").replaceChildren(...ordered.map((m) => matchCard(m, isMine(m))),
     ...byes.filter((b) => b !== myBye).map((b) => el("p", { className: "bye" }, `${b.name} has a BYE week.`)));
-}
-
-function view(m) {
-  $("viewer").hidden = false;
-  $("viewer-title").textContent = `${label(m.home)} vs ${label(m.away)}`;
-  $("viewer-frame").src = matchURL(m);
-  $("viewer-open").href = matchURL(m);
-  $("viewer").scrollIntoView({ behavior: "smooth", block: "start" });
-}
-function closeViewer() { $("viewer").hidden = true; $("viewer-frame").removeAttribute("src"); }
-
-async function copyLink() {
-  try {
-    await navigator.clipboard.writeText(location.href);
-    $("copied").textContent = "Link copied. Paste it in your team's group text.";
-  } catch {
-    $("copied").textContent = `Copy this link: ${location.href}`;
-  }
 }
 
 // The public form's "I'm not a robot" check (Cloudflare Turnstile).
@@ -159,12 +139,10 @@ async function start() {
     store.set("div", div());
     const mine = store.get("team");
     fillTeams(mine && mine[0] === div() ? mine : "");
-    closeViewer(); render();
+    render();
   });
-  $("week").addEventListener("change", () => { closeViewer(); render(); });
+  $("week").addEventListener("change", render);
   $("team").addEventListener("change", () => { store.set("team", $("team").value); render(); });
-  $("copy-link").addEventListener("click", copyLink);
-  $("viewer-close").addEventListener("click", closeViewer);
   $("signup").addEventListener("submit", signup);
   document.addEventListener("visibilitychange", reloadIfNewDeploy);
   window.addEventListener("pageshow", reloadIfNewDeploy);
