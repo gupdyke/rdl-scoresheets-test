@@ -52,6 +52,7 @@ button.ghost, .viewer-tabs button, .viewer-tabs a { background: transparent; col
 #signup-msg.ok { color: var(--ok); }
 #signup-msg.err { color: var(--err); }
 .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+.stamp { margin-top: 24px; font-size: 11px; color: var(--muted); }   /* as on the stats site */
 @media (max-width: 640px) {
   .controls { grid-template-columns: 1fr 1fr; }
   .controls .wide { grid-column: 1 / -1; }
