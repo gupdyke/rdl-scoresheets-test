@@ -44,6 +44,23 @@ button:disabled { opacity: .45; cursor: default; }
 #signup-msg.ok { color: var(--ok); }
 #signup-msg.err { color: var(--err); }
 .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+/* Help: the ? at the top right opens a popup (dialog) over the page */
+.title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.help-button { background: var(--panel); color: var(--accent); width: 36px; height: 36px; padding: 0;
+  border-radius: 50%; font-size: 20px; font-weight: 700; line-height: 1; flex: none; }
+#help { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
+  padding: 0; }
+.help-body { padding: 14px 16px; }   /* a tap on the dialog itself (outside this) closes it */
+#help::backdrop { background: rgb(0 0 0 / .45); }
+#help h3 { font-size: 15px; margin: 14px 0 4px; }
+#help p, #help li { font-size: 15px; }
+#help p { margin: 4px 0 8px; }
+#help ol { margin: 4px 0 8px; padding-left: 22px; }
+.help-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.help-head h2 { margin: 0; }
+.help-x { background: none; border: 0; color: var(--muted); font-size: 26px; line-height: 1; padding: 0 4px; }
+.help-foot { display: flex; justify-content: flex-end; margin-top: 10px; }
 .stamp { margin-top: 24px; font-size: 11px; color: var(--muted); }   /* as on the stats site */
 @media (max-width: 640px) {
   .controls { grid-template-columns: 1fr 1fr; }

@@ -66,14 +66,14 @@ function render() {
   // Your team: its match first and highlighted, or a note that it's on its bye week.
   const isMine = (m) => mineCode && (m.home_code === mineCode || m.away_code === mineCode);
   const myBye = byes.find((b) => b.code === mineCode);
-  $("mine").replaceChildren(...(myBye ? [el("p", { className: "bye mine-bye" }, `${myBye.name} has a BYE week. No scoresheet this week.`)] : []));
+  $("mine").replaceChildren(...(myBye ? [el("p", { className: "bye mine-bye" }, `${myBye.name} has a BYE week`, el("br"), "No scoresheet this week")] : []));
   if (!matches.length) {
     $("matches").replaceChildren(el("p", { className: "empty" }, "No scoresheets for this division and week yet."));
     return;
   }
   const ordered = [...matches.filter(isMine), ...matches.filter((m) => !isMine(m))];
   $("matches").replaceChildren(...ordered.map((m) => matchCard(m, isMine(m))),
-    ...byes.filter((b) => b !== myBye).map((b) => el("p", { className: "bye" }, `${b.name} has a BYE week.`)));
+    ...byes.filter((b) => b !== myBye).map((b) => el("p", { className: "bye" }, `${b.name} has a BYE week`)));
 }
 
 // The public form's "I'm not a robot" check (Cloudflare Turnstile).
@@ -149,4 +149,14 @@ async function start() {
   setupTurnstile();
   render();
 }
+// Help popup: the ? opens it; ×, Close, Esc or a tap outside it closes it. Set up
+// before loading the catalog, so Help works even if that fails.
+function setupHelp() {
+  const help = $("help");
+  $("help-open").addEventListener("click", () => help.showModal());
+  help.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => help.close()));
+  help.addEventListener("click", (e) => { if (e.target === help) help.close(); });
+}
+
+setupHelp();
 start().catch(() => { $("matches").replaceChildren(el("p", { className: "empty" }, "Couldn't load the scoresheets.")); });
