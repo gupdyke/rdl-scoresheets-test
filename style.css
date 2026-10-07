@@ -1,14 +1,17 @@
 :root {
   --bg: #f6f6f3; --panel: #fff; --ink: #1d1d1b; --muted: #6b6b66; --line: #d9d9d3;
   --accent: #1f5f9e; --accent-ink: #fff; --ok: #2e7d32; --err: #b3261e; --sel: #eaf2fb;
+  --link: #1a5fb4;   /* as on the Newsletter Reader (the browser's default blue is unreadable in dark mode) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #151514; --panel: #1f1f1d; --ink: #ecece8; --muted: #a3a39c; --line: #3a3a36;
     --accent: #7db3ea; --accent-ink: #10202f; --ok: #81c784; --err: #f28b82; --sel: #1d2a38;
+    --link: #8ab4f8;
   }
 }
 * { box-sizing: border-box; }
+a, a:visited { color: var(--link); }
 body { margin: 0 auto; max-width: 860px; padding: 16px; background: var(--bg); color: var(--ink);
   font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
 h1 { font-size: 24px; margin: 0; }
@@ -46,8 +49,8 @@ button:disabled { opacity: .45; cursor: default; }
 .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
 /* The ? at the top right */
 .title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.help-button { background: var(--panel); color: var(--accent); width: 36px; height: 36px; padding: 0;
-  border-radius: 50%; font-size: 20px; font-weight: 700; line-height: 1; flex: none; }
+.help-button { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 1px solid var(--line);   /* as on the */
+  background: var(--bg); color: var(--muted); font-size: 15px; font-weight: 700; line-height: 1; flex: none; }   /* Newsletter Reader */
 /* Help popup (the ? at the top right), styled like Self Checkout's popups: centered card,
    dark backdrop, small × at the top right; ×, Esc or a tap outside it closes it */
 .popup { width: calc(100% - 2rem); max-width: 24rem; max-height: 85vh; overflow-y: auto; padding: 0;
@@ -71,6 +74,7 @@ button:disabled { opacity: .45; cursor: default; }
 .popup-section p { margin: 0 0 4px; }
 .popup-section ol, .popup-section ul { margin: 0; padding-left: 20px; }
 .popup-section li + li { margin-top: 4px; }
+#license-text p { margin: 0 0 12px; }   /* paragraphs spaced as in Self Checkout's License popup */
 .stamp { margin-top: 24px; font-size: 11px; color: var(--muted); }   /* as on the stats site */
 @media (max-width: 640px) {
   .controls { grid-template-columns: 1fr 1fr; }

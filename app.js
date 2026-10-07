@@ -149,14 +149,30 @@ async function start() {
   setupTurnstile();
   render();
 }
-// Help popup: the ? opens it; ×, Esc or a tap outside it closes it. Set up
-// before loading the catalog, so Help works even if that fails.
-function setupHelp() {
-  const help = $("help");
-  $("help-open").addEventListener("click", () => help.showModal());
-  help.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => help.close()));
-  help.addEventListener("click", (e) => { if (e.target === help) help.close(); });
+// Help popup: the ? opens it. Set up before loading the catalog, so Help works even if that fails.
+$("help-open").addEventListener("click", () => $("help").showModal());
+// The footer's License link (public site) opens the license in a popup, like Help, instead
+// of leaving the page with no way back (LICENSE.txt is still the link for no-JS / new tab).
+async function openLicense(e) {
+  const a = e.target.closest('a[href="LICENSE.txt"]');
+  if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  e.preventDefault();
+  const box = document.getElementById("license-text");
+  if (!box.childElementCount) {
+    try {
+      const text = await (await fetch("LICENSE.txt")).text();
+      // The file's lines are wrapped: one paragraph per blank-line-separated block.
+      box.replaceChildren(...text.trim().split(/\n\s*\n/).map((para) =>
+        Object.assign(document.createElement("p"), { textContent: para.replace(/\n/g, " ") })));
+    } catch { location.href = a.href; return; }
+  }
+  document.getElementById("license").showModal();
 }
+document.addEventListener("click", openLicense);
+// Every popup (Help, License): ×, Esc or a tap outside it closes it.
+document.querySelectorAll("dialog.popup").forEach((d) => {
+  d.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => d.close()));
+  d.addEventListener("click", (e) => { if (e.target === d) d.close(); });
+});
 
-setupHelp();
 start().catch(() => { $("matches").replaceChildren(el("p", { className: "empty" }, "Couldn't load the scoresheets.")); });
