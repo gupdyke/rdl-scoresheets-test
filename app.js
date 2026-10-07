@@ -68,7 +68,8 @@ function render() {
   const myBye = byes.find((b) => b.code === mineCode);
   $("mine").replaceChildren(...(myBye ? [el("p", { className: "bye mine-bye" }, `${myBye.name} has a BYE week`, el("br"), "No scoresheet this week")] : []));
   if (!matches.length) {
-    $("matches").replaceChildren(el("p", { className: "empty" }, "No scoresheets for this division and week yet."));
+    $("matches").replaceChildren(el("p", { className: "empty" }, "No scoresheets for this division and week yet. ",
+      el("button", { type: "button", className: "link-button", onclick: () => location.reload() }, "Reload")));
     return;
   }
   const ordered = [...matches.filter(isMine), ...matches.filter((m) => !isMine(m))];
@@ -81,7 +82,10 @@ function setupTurnstile() {
   if (!CFG.public) return;
   // Its script loads on its own schedule (async), so wait for it rather than for a page event.
   const go = (tries = 0) => {
-    if (window.turnstile) turnstileId = turnstile.render("#turnstile", { sitekey: CFG.turnstileSiteKey });
+    if (window.turnstile) {
+      try { turnstileId = turnstile.render("#turnstile", { sitekey: CFG.turnstileSiteKey }); }
+      catch (e) { console.warn("Turnstile:", e); }   // the sign-up says to try again; the page still works
+    }
     else if (tries < 100) setTimeout(() => go(tries + 1), 100);
   };
   go();
@@ -124,15 +128,35 @@ async function reloadIfNewDeploy() {
   } catch { /* offline: keep what's showing */ }
 }
 
+// The list of weeks and matches. An iPhone home-screen icon often opened on "No scoresheets"
+// until a reload: it can start from a stale copy of the page and its data, or before the
+// network is ready. So: always ask the server (no-store), try a few times, and use the
+// newest version.json's stamp so a stale page still gets the current list.
+async function loadCatalog() {
+  if (!CFG.public) return (await fetch("/api/catalog", { cache: "no-store" })).json();
+  let v = CFG.version;
+  try { v = (await (await fetch(`version.json?t=${Date.now()}`, { cache: "no-store" })).json()).v || v; } catch { /* keep the page's */ }
+  for (let tries = 0; ; tries++) {
+    try {
+      const c = await (await fetch(`data/catalog.json?v=${v}`, { cache: "no-store" })).json();
+      if (c.weeks && c.weeks.length) return c;
+    } catch (e) { if (tries >= 3) throw e; }
+    if (tries >= 3) return { weeks: [], teams: {}, name: "", current: null };
+    await new Promise((r) => setTimeout(r, 700 * (tries + 1)));
+  }
+}
+
 async function start() {
-  catalog = await (await fetch(CFG.public ? `data/catalog.json?v=${CFG.version}` : "/api/catalog")).json();
+  catalog = await loadCatalog();
   $("season").textContent = `${catalog.name} season`;
   // A shared link (?div=F&week=10&team=F7) wins over what this browser remembers.
   const q = new URLSearchParams(location.search);
   const divs = LETTERS.map((l) => [l, `${l} Division`]);
   fill($("division"), divs, (q.get("div") || store.get("div") || "A").toUpperCase());
   fill($("signup-division"), [["", "Choose…"], ...divs], store.get("div") || "");
-  fill($("week"), catalog.weeks.map((w) => [w.number, w.label]), q.get("week") || catalog.current);
+  const asked = q.get("week");
+  fill($("week"), catalog.weeks.map((w) => [w.number, w.label]),
+    catalog.weeks.some((w) => String(w.number) === asked) ? asked : catalog.current);
   fillTeams((q.get("team") || store.get("team") || "").toUpperCase());
 
   $("division").addEventListener("change", () => {
@@ -146,8 +170,10 @@ async function start() {
   $("signup").addEventListener("submit", signup);
   document.addEventListener("visibilitychange", reloadIfNewDeploy);
   window.addEventListener("pageshow", reloadIfNewDeploy);
-  setupTurnstile();
+  // The matches first: a problem with the sign-up form's robot check must never stop them
+  // showing (it did on iPhone home-screen launches: "Couldn't load the scoresheets").
   render();
+  try { setupTurnstile(); } catch (e) { console.warn("Turnstile:", e); }
 }
 // Help popup: the ? opens it. Set up before loading the catalog, so Help works even if that fails.
 $("help-open").addEventListener("click", () => $("help").showModal());
@@ -175,4 +201,7 @@ document.querySelectorAll("dialog.popup").forEach((d) => {
   d.addEventListener("click", (e) => { if (e.target === d) d.close(); });
 });
 
-start().catch(() => { $("matches").replaceChildren(el("p", { className: "empty" }, "Couldn't load the scoresheets.")); });
+start().catch(() => {
+  $("matches").replaceChildren(el("p", { className: "empty" }, "Couldn't load the scoresheets. ",
+    el("button", { type: "button", className: "link-button", onclick: () => location.reload() }, "Reload")));
+});
