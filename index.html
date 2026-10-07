@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RDL Scoresheets (test)</title>
-  <link rel="stylesheet" href="style.css?v=20261007164449">
+  <link rel="stylesheet" href="style.css?v=20261007170212">
 </head>
 <body>
   <header>
@@ -15,32 +15,40 @@
     <p id="season" class="sub"></p>
   </header>
 
-  <dialog id="help" aria-labelledby="help-title"><div class="help-body">
-    <div class="help-head">
-      <h2 id="help-title">How to use this page</h2>
-      <button type="button" class="help-x" data-close aria-label="Close help">&times;</button>
+  <dialog id="help" class="popup" aria-labelledby="help-title" aria-describedby="help-desc"><div class="popup-body">
+    <button type="button" class="popup-x" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="popup-head">
+      <h2 id="help-title">Help</h2>
+      <p id="help-desc">How to use this page.</p>
     </div>
-    <h3>Get your scoresheet</h3>
-    <ol>
-      <li>Pick your <b>Division</b> and the <b>Week</b>. The page opens on the coming week.</li>
-      <li>Pick <b>My team</b> to put your match at the top, marked "Your match". This
-        browser remembers your division and team for next time.</li>
-      <li>Tap <b>Download (Front + Back)</b>. You get one PDF with both sides of the
-        scoresheet; print both pages (double-sided if you can).</li>
-    </ol>
-    <p>Each match shows the home team first and where it's played. A team on its bye
-      week has no scoresheet; the page says "&lt;team&gt; has a BYE week"</p>
-    <p>The address bar keeps your division, week and team, so you can share the link
-      or save it as a bookmark.</p>
-    <h3>Files not showing up?</h3>
-    <p>Refresh the page, or re-select your division and team. A week's scoresheets
-      appear once they've been posted; if a week still says "No scoresheets", check back later.</p>
-    <h3>Get them by email</h3>
-    <p>Enter your email address and division under <b>Get the scoresheets by email</b>,
-      complete the "I'm not a robot" check and tap <b>Sign up</b>. You'll get an email
-      with a link: open it and tap <b>Confirm</b>. Sign-ups are reviewed before anyone
-      is added to the mailing list.</p>
-    <div class="help-foot"><button type="button" data-close>Close</button></div>
+    <div class="popup-section">
+      <h3>Get your scoresheet</h3>
+      <ol>
+        <li>Pick your <b>Division</b> and the <b>Week</b>. The page opens on the coming week.</li>
+        <li>Pick <b>My team</b> to put your match at the top, marked "Your match". This
+          browser remembers your division and team for next time.</li>
+        <li>Tap <b>Download (Front + Back)</b>. You get one PDF with both sides of the
+          scoresheet; print both pages (double-sided if you can).</li>
+      </ol>
+    </div>
+    <div class="popup-section">
+      <p>Each match shows the home team first and where it's played. A team on its bye
+        week has no scoresheet; the page says "&lt;team&gt; has a BYE week"</p>
+      <p>The address bar keeps your division, week and team, so you can share the link
+        or save it as a bookmark.</p>
+    </div>
+    <div class="popup-section">
+      <h3>Files not showing up?</h3>
+      <p>Refresh the page, or re-select your division and team. A week's scoresheets
+        appear once they've been posted; if a week still says "No scoresheets", check back later.</p>
+    </div>
+    <div class="popup-section">
+      <h3>Get them by email</h3>
+      <p>Enter your email address and division under <b>Get the scoresheets by email</b>,
+        complete the "I'm not a robot" check and tap <b>Sign up</b>. You'll get an email
+        with a link: open it and tap <b>Confirm</b>. Sign-ups are reviewed before anyone
+        is added to the mailing list.</p>
+    </div>
   </div></dialog>
 
   <section class="panel">
@@ -66,10 +74,10 @@
     <p class="note">We'll email you a link to confirm your address. Sign-ups are then reviewed before anyone is added to the mailing list.</p>
   </section>
 
-  <footer class="stamp">Updated Oct 7, 2026 12:44 PM<br>© 2026 Gerald L. Updyke · <a href="LICENSE.txt">License</a></footer>
+  <footer class="stamp">Updated Oct 7, 2026 1:02 PM<br>© 2026 Gerald L. Updyke · <a href="LICENSE.txt">License</a></footer>
 
-  <script>window.SCORESHEETS = {"public": true, "version": "20261007164449", "signupURL": "https://rdl-signups.rdl-signups-worker.workers.dev", "turnstileSiteKey": "0x4AAAAAAFPqkSKON-LGIh86"};</script>
+  <script>window.SCORESHEETS = {"public": true, "version": "20261007170212", "signupURL": "https://rdl-signups.rdl-signups-worker.workers.dev", "turnstileSiteKey": "0x4AAAAAAFPqkSKON-LGIh86"};</script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-  <script src="app.js?v=20261007164449" defer></script>
+  <script src="app.js?v=20261007170212" defer></script>
 </body>
 </html>

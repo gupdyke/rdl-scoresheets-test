@@ -149,7 +149,7 @@ async function start() {
   setupTurnstile();
   render();
 }
-// Help popup: the ? opens it; ×, Close, Esc or a tap outside it closes it. Set up
+// Help popup: the ? opens it; ×, Esc or a tap outside it closes it. Set up
 // before loading the catalog, so Help works even if that fails.
 function setupHelp() {
   const help = $("help");

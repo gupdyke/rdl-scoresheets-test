@@ -44,23 +44,33 @@ button:disabled { opacity: .45; cursor: default; }
 #signup-msg.ok { color: var(--ok); }
 #signup-msg.err { color: var(--err); }
 .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
-/* Help: the ? at the top right opens a popup (dialog) over the page */
+/* The ? at the top right */
 .title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .help-button { background: var(--panel); color: var(--accent); width: 36px; height: 36px; padding: 0;
   border-radius: 50%; font-size: 20px; font-weight: 700; line-height: 1; flex: none; }
-#help { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
-  background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
-  padding: 0; }
-.help-body { padding: 14px 16px; }   /* a tap on the dialog itself (outside this) closes it */
-#help::backdrop { background: rgb(0 0 0 / .45); }
-#help h3 { font-size: 15px; margin: 14px 0 4px; }
-#help p, #help li { font-size: 15px; }
-#help p { margin: 4px 0 8px; }
-#help ol { margin: 4px 0 8px; padding-left: 22px; }
-.help-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.help-head h2 { margin: 0; }
-.help-x { background: none; border: 0; color: var(--muted); font-size: 26px; line-height: 1; padding: 0 4px; }
-.help-foot { display: flex; justify-content: flex-end; margin-top: 10px; }
+/* Help popup (the ? at the top right), styled like Self Checkout's popups: centered card,
+   dark backdrop, small × at the top right; ×, Esc or a tap outside it closes it */
+.popup { width: calc(100% - 2rem); max-width: 24rem; max-height: 85vh; overflow-y: auto; padding: 0;
+  color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1); }
+.popup[open] { animation: popup-in .2s ease-out; }
+.popup::backdrop { background: rgb(0 0 0 / .8); }
+@keyframes popup-in { from { opacity: 0; transform: scale(.95); } }
+.popup-body { position: relative; padding: 24px; }   /* a tap on the dialog itself (outside this) closes it */
+.popup-x { position: absolute; top: 16px; right: 16px; width: 20px; height: 20px; padding: 0; display: grid;
+  place-items: center; border: 0; border-radius: 2px; background: none; color: var(--ink); opacity: .7; cursor: pointer; }
+.popup-x:hover { opacity: 1; }
+.popup-x svg { width: 16px; height: 16px; }
+.popup-head { text-align: center; margin-bottom: 16px; }
+.popup-head h2 { font-size: 18px; font-weight: 600; line-height: 1; letter-spacing: -.01em; margin: 0 0 6px; }
+.popup-head p { font-size: 14px; color: var(--muted); margin: 0; }
+@media (min-width: 640px) { .popup-head { text-align: left; } }
+.popup-section + .popup-section { margin-top: 20px; }
+.popup-section h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+.popup-section p, .popup-section li { font-size: 14px; }
+.popup-section p { margin: 0 0 4px; }
+.popup-section ol, .popup-section ul { margin: 0; padding-left: 20px; }
+.popup-section li + li { margin-top: 4px; }
 .stamp { margin-top: 24px; font-size: 11px; color: var(--muted); }   /* as on the stats site */
 @media (max-width: 640px) {
   .controls { grid-template-columns: 1fr 1fr; }
