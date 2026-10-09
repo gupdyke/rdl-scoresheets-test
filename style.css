@@ -69,6 +69,7 @@ button:disabled { opacity: .45; cursor: default; }
 .popup-head h2 { font-size: 18px; font-weight: 600; line-height: 1; letter-spacing: -.01em; margin: 0 0 6px; }
 .popup-head p { font-size: 14px; color: var(--muted); margin: 0; }
 @media (min-width: 640px) { .popup-head { text-align: left; } }
+@media (min-width: 900px) { .popup { max-width: 40rem; } }   /* wider on a desktop (24rem on phones and tablets) */
 .popup-section + .popup-section { margin-top: 20px; }
 .popup-section h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
 .popup-section p, .popup-section li { font-size: 14px; }
