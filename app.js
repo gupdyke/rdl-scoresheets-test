@@ -51,6 +51,9 @@ function syncURL() {
 function matchCard(m, mine) {
   const dl = el("a", { className: "button", href: matchURL(m, true) }, "Download (Front + Back)");
   if (CFG.public) dl.download = matchFile(m);
+  // A new window: the iPhone home-screen app ignores `download` and would show the PDF in
+  // its own window, with no way back. In a new one it opens in a Safari sheet with Done.
+  Object.assign(dl, { target: "_blank", rel: "noopener" });
   return el("div", { className: `match${mine ? " mine" : ""}` },
     mine ? el("p", { className: "tag-mine" }, "Your match") : null,
     el("h3", {}, label(m.home), el("span", { className: "vs" }, " (home) vs "), label(m.away)),
