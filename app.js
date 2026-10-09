@@ -32,6 +32,8 @@ function matchURL(m, download) {
   return `/combined.pdf?${q}${download ? "&download" : ""}`;
 }
 const matchFile = (m) => (m.pdf ? m.pdf.split("/").pop() : null);
+// Opened from a home-screen icon (no Safari toolbar)
+const homeScreenApp = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
 
 function fill(select, items, value) {
   select.replaceChildren(...items.map(([v, t]) => el("option", { value: v }, t)));
@@ -50,9 +52,9 @@ function syncURL() {
 
 function matchCard(m, mine) {
   const dl = el("a", { className: "button", href: matchURL(m, true) }, "Download (Front + Back)");
-  if (CFG.public) dl.download = matchFile(m);
-  // A new window: the iPhone home-screen app ignores `download` and would show the PDF in
-  // its own window, with no way back. In a new one it opens in a Safari sheet with Done.
+  // The iPhone home-screen app ignores `download` and shows the PDF in its own window, with
+  // no way back. There, leave `download` off and open a new window: a Safari sheet with Done.
+  if (CFG.public && !homeScreenApp) dl.download = matchFile(m);
   Object.assign(dl, { target: "_blank", rel: "noopener" });
   return el("div", { className: `match${mine ? " mine" : ""}` },
     mine ? el("p", { className: "tag-mine" }, "Your match") : null,
