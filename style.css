@@ -77,6 +77,8 @@ button:disabled { opacity: .45; cursor: default; }
 .popup-section ol, .popup-section ul { margin: 0; padding-left: 20px; }
 .popup-section li + li { margin-top: 4px; }
 #license-text p { margin: 0 0 12px; }   /* paragraphs spaced as in Self Checkout's License popup */
+.more-tools { margin: 32px 0 0; font-size: 14px; line-height: 1.6; }   /* links to the other two apps, above the footer */
+.more-tools + .stamp { margin-top: 12px; }
 .stamp { margin-top: 24px; font-size: 11px; color: var(--muted); }   /* as on the stats site */
 @media (max-width: 640px) {
   .controls { grid-template-columns: 1fr 1fr; }
