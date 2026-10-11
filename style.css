@@ -54,14 +54,16 @@ button:disabled { opacity: .45; cursor: default; }
   background: var(--bg); color: var(--muted); font-size: 15px; font-weight: 700; line-height: 1; flex: none; }   /* Newsletter Reader */
 /* Help popup (the ? at the top right), styled like Self Checkout's popups: centered card,
    dark backdrop, small × at the top right; ×, Esc or a tap outside it closes it */
-.popup { width: calc(100% - 2rem); max-width: 24rem; max-height: 85vh; overflow-y: auto; padding: 0;
+.popup { width: calc(100% - 2rem); max-width: 24rem; max-height: 85dvh; overflow: hidden; padding: 0;
   color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1); }
-.popup[open] { animation: popup-in .2s ease-out; }
+/* Only the body scrolls, so the × stays in the corner (like Self Checkout; Jerry, 2026-10-11).
+   85dvh: the visible screen, so the bottom isn't hidden behind a phone browser's bars */
+.popup[open] { display: flex; flex-direction: column; animation: popup-in .2s ease-out; }
 .popup::backdrop { background: rgb(0 0 0 / .8); }
 @keyframes popup-in { from { opacity: 0; transform: scale(.95); } }
-.popup-body { position: relative; padding: 24px; }   /* a tap on the dialog itself (outside this) closes it */
-.popup-x { position: absolute; top: 16px; right: 16px; width: 20px; height: 20px; padding: 0; display: grid;
+.popup-body { padding: 24px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }   /* a tap on the dialog itself (outside this) closes it */
+.popup-x { position: absolute; z-index: 1; top: 16px; right: 16px; width: 20px; height: 20px; padding: 0; display: grid;
   place-items: center; border: 0; border-radius: 2px; background: none; color: var(--ink); opacity: .7; cursor: pointer; }
 .popup-x:hover { opacity: 1; }
 .popup-x svg { width: 16px; height: 16px; }
